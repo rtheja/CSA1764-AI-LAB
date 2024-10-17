@@ -1,0 +1,27 @@
+def is_valid(mapping):
+    return len(set(mapping.values())) == len(mapping) and all(v >= 0 for v in mapping.values()) and all(mapping[letter] != 0 for letter in 'SM')
+
+def calculate(mapping):
+    send = mapping['S'] * 1000 + mapping['E'] * 100 + mapping['N'] * 10 + mapping['D']
+    more = mapping['M'] * 1000 + mapping['O'] * 100 + mapping['R'] * 10 + mapping['E']
+    money = mapping['M'] * 10000 + mapping['O'] * 1000 + mapping['N'] * 100 + mapping['E'] * 10 + mapping['Y']
+    return send + more == money
+
+def solve():
+    from itertools import permutations
+    letters = 'SENDMORY'
+    digits = range(10)
+    for perm in permutations(digits, len(letters)):
+        mapping = dict(zip(letters, perm))
+        if is_valid(mapping) and calculate(mapping):
+            return mapping
+    return None
+
+if __name__ == "__main__":
+    solution = solve()
+    if solution:
+        print("Solution found:")
+        for letter, digit in solution.items():
+            print(f"{letter} = {digit}")
+    else:
+        print("No solution exists.")

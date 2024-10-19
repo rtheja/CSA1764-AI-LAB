@@ -1,0 +1,53 @@
+class VacuumCleaner:
+    def __init__(self, room):
+        self.room = room  # 2D list representing the room
+        self.position = (0, 0)  # Starting position of the vacuum cleaner
+        self.cleaned_count = 0  # Counter for cleaned cells
+
+    def clean(self):
+        x, y = self.position
+        if self.room[x][y] == 1:  # 1 represents a dirty cell
+            self.room[x][y] = 0  # Clean the cell
+            self.cleaned_count += 1
+            print(f"Cleaned cell at ({x}, {y})")
+        else:
+            print(f"Cell at ({x}, {y}) is already clean")
+
+    def move(self, direction):
+        x, y = self.position
+        if direction == 'up' and x > 0:
+            self.position = (x - 1, y)
+        elif direction == 'down' and x < len(self.room) - 1:
+            self.position = (x + 1, y)
+        elif direction == 'left' and y > 0:
+            self.position = (x, y - 1)
+        elif direction == 'right' and y < len(self.room[0]) - 1:
+            self.position = (x, y + 1)
+        else:
+            print("Move not possible!")
+        print(f"Moved to position {self.position}")
+
+    def run(self):
+        while True:
+            self.clean()
+            if self.cleaned_count == sum(sum(row) for row in self.room):
+                print("All cells cleaned!")
+                break
+            direction = input("Enter direction to move (up, down, left, right) or 'quit' to stop: ").strip().lower()
+            if direction == 'quit':
+                print("Cleaning session ended.")
+                break
+            self.move(direction)
+
+def main():
+    room = [
+        [1, 0, 1],
+        [0, 1, 0],
+        [1, 1, 1]
+    ]
+
+    vacuum = VacuumCleaner(room)
+    vacuum.run()
+
+if __name__ == "__main__":
+    main()

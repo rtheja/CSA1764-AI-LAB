@@ -1,0 +1,66 @@
+from collections import deque
+
+class JugState:
+    def __init__(self, jug1, jug2):
+        self.jug1 = jug1
+        self.jug2 = jug2
+
+    def __repr__(self):
+        return f"JugState(jug1={self.jug1}, jug2={self.jug2})"
+
+def water_jug_problem(capacity1, capacity2, target):
+    visited = set()
+    queue = deque()
+    
+    initial_state = JugState(0, 0)
+    queue.append((initial_state, []))
+    
+    while queue:
+        current_state, path = queue.popleft()
+        
+        if current_state.jug1 == target or current_state.jug2 == target:
+            return path + [current_state]
+
+        if (current_state.jug1, current_state.jug2) in visited:
+            continue
+
+        visited.add((current_state.jug1, current_state.jug2))
+
+        next_state = JugState(capacity1, current_state.jug2)
+        queue.append((next_state, path + [current_state]))
+
+        next_state = JugState(current_state.jug1, capacity2)
+        queue.append((next_state, path + [current_state]))
+
+        next_state = JugState(0, current_state.jug2)
+        queue.append((next_state, path + [current_state]))
+
+        next_state = JugState(current_state.jug1, 0)
+        queue.append((next_state, path + [current_state]))
+
+        pour_amount = min(current_state.jug1, capacity2 - current_state.jug2)
+        next_state = JugState(current_state.jug1 - pour_amount, current_state.jug2 + pour_amount)
+        queue.append((next_state, path + [current_state]))
+
+        pour_amount = min(current_state.jug2, capacity1 - current_state.jug1)
+        next_state = JugState(current_state.jug1 + pour_amount, current_state.jug2 - pour_amount)
+        queue.append((next_state, path + [current_state]))
+
+    return None
+
+def main():
+    capacity1 = 4
+    capacity2 = 3
+    target = 2
+
+    result = water_jug_problem(capacity1, capacity2, target)
+
+    if result:
+        print("Steps to reach the target:")
+        for state in result:
+            print(state)
+    else:
+        print("No solution found.")
+
+if __name__ == "__main__":
+    main()

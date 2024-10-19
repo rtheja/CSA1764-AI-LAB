@@ -1,0 +1,35 @@
+import itertools
+
+def calculate_distance(city1, city2):
+    return ((city1[0] - city2[0]) ** 2 + (city1[1] - city2[1]) ** 2) ** 0.5
+
+def total_distance(route, cities):
+    distance = 0
+    for i in range(len(route)):
+        distance += calculate_distance(cities[route[i]], cities[route[(i + 1) % len(route)]])
+    return distance
+
+def traveling_salesman_brute_force(cities):
+    n = len(cities)
+    all_routes = itertools.permutations(range(n))
+    
+    min_distance = float('inf')
+    best_route = None
+    
+    for route in all_routes:
+        current_distance = total_distance(route, cities)
+        if current_distance < min_distance:
+            min_distance = current_distance
+            best_route = route
+            
+    return best_route, min_distance
+
+def main():
+    cities = [(0, 0), (1, 3), (4, 3), (6, 1)]  # Sample cities (x, y coordinates)
+    best_route, min_distance = traveling_salesman_brute_force(cities)
+    
+    print("Best route:", best_route)
+    print("Minimum distance:", min_distance)
+
+if __name__ == "__main__":
+    main()
